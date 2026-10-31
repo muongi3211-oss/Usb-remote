@@ -1,0 +1,37 @@
+name: Build and Release APK
+
+on:
+  push:
+    tags:
+      - 'v*'  # Kích hoạt khi push tag dạng v1.0, v1.1.2...
+  workflow_dispatch: # Cho phép bấm nút chạy thủ công trên GitHub
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Mã nguồn Checkout
+        uses: actions/checkout@v4
+
+      - name: Thiết lập JDK 17 (Temurin)
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'gradle'
+
+      - name: Cấp quyền thực thi cho Gradlew
+        run: chmod +x gradlew
+
+      - name: Build Signed/Release APK bằng Gradle
+        run: ./gradlew assembleRelease
+
+      - name: Đăng tải APK lên GitHub Releases
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/v')
+        with:
+          files: app/build/outputs/apk/release/app-release-unsigned.apk
+          # Lưu ý: Nếu bạn có file keystore để ký app, cấu hình signingConfigs trong build.gradle.kts và thay đường dẫn output tương ứng.
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

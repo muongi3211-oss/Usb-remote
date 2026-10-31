@@ -81,7 +81,8 @@ jobs:
     steps:
       - name: Tải các artifact đã build từ các job trước
         uses: actions/download-artifact@v4
-        path: artifacts
+        with:
+          path: artifacts
 
       - name: Tạo GitHub Release và đính kèm file
         uses: softprops/action-gh-release@v1

@@ -4,7 +4,6 @@
     android:layout_height="match_parent"
     android:background="@android:color/black">
 
-    <!-- SurfaceView hiển thị trực tiếp luồng giải mã từ phần cứng MediaCodec (Zero-copy) -->
     <SurfaceView
         android:id="@+id/surfaceView"
         android:layout_width="match_parent"

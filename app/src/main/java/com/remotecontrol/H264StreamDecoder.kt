@@ -92,13 +92,11 @@ class H264StreamDecoder(private val surface: Surface) {
 
                     when (nalUnitType) {
                         5, 7, 8 -> {
-                            // IDR Frame hoặc SPS/PPS
                             if (!hasKeyframeReceived) {
                                 hasKeyframeReceived = true
                             }
                         }
                         1 -> {
-                            // P-Frame: Bỏ qua nếu chưa nhận được Keyframe đầu tiên để tránh sọc hình/xám màn hình
                             if (!hasKeyframeReceived) continue
                         }
                     }
@@ -117,7 +115,7 @@ class H264StreamDecoder(private val surface: Surface) {
                 }
             }
         } catch (e: Exception) {
-            Log.e(TAG, "Lỗi vòng lặp đọc socket", e)
+            Log.e(TAG, "Lỗi đọc socket", e)
         } finally {
             stop()
         }

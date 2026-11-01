@@ -7,9 +7,6 @@ on:
   workflow_dispatch:
 
 jobs:
-  # ==========================================
-  # JOB 1: BUILD ANDROID APK (Chạy trên Linux)
-  # ==========================================
   build-android:
     name: Build Android APK
     runs-on: ubuntu-latest
@@ -41,9 +38,6 @@ jobs:
           name: android-apk
           path: app/build/outputs/apk/release/app-release.apk
 
-  # ==========================================
-  # JOB 2: BUILD WINDOWS EXE (Chạy trên Windows)
-  # ==========================================
   build-windows:
     name: Build Windows Server EXE
     runs-on: windows-latest
@@ -72,9 +66,6 @@ jobs:
           name: windows-exe
           path: dist/pc_server.exe
 
-  # ==========================================
-  # JOB 3: TẠO GITHUB RELEASE VÀ UPLOAD CẢ 2 FILE
-  # ==========================================
   release:
     name: Publish GitHub Release
     needs: [build-android, build-windows]
@@ -93,7 +84,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || 'v1.0.0-manual' }}
-          name: "USB Remote Control Release"
+          name: "USB PC Remote Release"
           files: |
             artifacts/android-apk/app-release.apk
             artifacts/windows-exe/pc_server.exe

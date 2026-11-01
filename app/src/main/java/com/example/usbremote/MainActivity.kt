@@ -1,4 +1,4 @@
-package com.example.remotecontrol
+package com.example.usbremote
 
 import android.os.Bundle
 import android.view.SurfaceHolder

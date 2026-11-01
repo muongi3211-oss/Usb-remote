@@ -32,16 +32,10 @@ jobs:
           gradle wrapper --gradle-version 8.5
           chmod +x gradlew
 
-      - name: Build Release APK bằng Gradle
+      - name: Build Signed Release APK bằng Gradle
         run: ./gradlew assembleRelease
 
-      - name: Tự động ký tên APK (Sign APK để cài được trực tiếp)
-        run: |
-          keytool -genkey -v -keystore debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
-          jarsigner -verbose -keystore debug.keystore -storepass android -keypass android app/build/outputs/apk/release/app-release-unsigned.apk androiddebugkey
-          cp app/build/outputs/apk/release/app-release-unsigned.apk app/build/outputs/apk/release/app-release.apk
-
-      - name: Lưu trữ artifact APK đã ký
+      - name: Lưu trữ artifact APK
         uses: actions/upload-artifact@v4
         with:
           name: android-apk
@@ -95,7 +89,7 @@ jobs:
         with:
           path: artifacts
 
-      - name: Tạo GitHub Release và đính kèm file đã ký
+      - name: Tạo GitHub Release và đính kèm file
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || 'v1.0.0-manual' }}

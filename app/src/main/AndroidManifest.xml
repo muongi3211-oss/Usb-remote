@@ -6,7 +6,7 @@
 
     <application
         android:allowBackup="true"
-        android:label="PC Remote Control"
+        android:label="USB PC Remote"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
         

@@ -7,6 +7,9 @@ on:
   workflow_dispatch:
 
 jobs:
+  # ==========================================
+  # JOB 1: BUILD ANDROID APK (Chạy trên Linux)
+  # ==========================================
   build-android:
     name: Build Android APK
     runs-on: ubuntu-latest
@@ -22,6 +25,13 @@ jobs:
           java-version: '17'
           cache: 'gradle'
 
+      - name: Tự động tạo Gradle Wrapper (Khắc phục lỗi thiếu file gradlew)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gradle
+          gradle wrapper --gradle-version 8.5
+          chmod +x gradlew
+
       - name: Build Release APK bằng Gradle
         run: ./gradlew assembleRelease
 
@@ -31,6 +41,9 @@ jobs:
           name: android-apk
           path: app/build/outputs/apk/release/app-release-unsigned.apk
 
+  # ==========================================
+  # JOB 2: BUILD WINDOWS EXE (Chạy trên Windows)
+  # ==========================================
   build-windows:
     name: Build Windows Server EXE
     runs-on: windows-latest
@@ -59,6 +72,9 @@ jobs:
           name: windows-exe
           path: dist/pc_server.exe
 
+  # ==========================================
+  # JOB 3: TẠO GITHUB RELEASE VÀ UPLOAD CẢ 2 FILE
+  # ==========================================
   release:
     name: Publish GitHub Release
     needs: [build-android, build-windows]

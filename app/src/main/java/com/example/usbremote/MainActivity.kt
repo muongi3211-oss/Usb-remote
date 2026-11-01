@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import java.net.Socket
 
 class MainActivity : AppCompatActivity() {
-    private var decoder: H264StreamDecoder? = null
+    private var decoder: JpgStreamDecoder? = null
     private var socketThread: Thread? = null
     private var isConnected = false
 
@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity() {
             while (isConnected) {
                 try {
                     val socket = Socket("127.0.0.1", 5555)
-                    decoder = H264StreamDecoder(surface)
+                    decoder = JpgStreamDecoder(surface)
                     decoder?.start(socket.inputStream)
                     break
                 } catch (e: Exception) {

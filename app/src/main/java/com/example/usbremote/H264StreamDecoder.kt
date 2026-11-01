@@ -1,4 +1,5 @@
-package com.example.remotecontrol
+
+package com.example.usbremote
 
 import android.media.MediaCodec
 import android.media.MediaCodecInfo

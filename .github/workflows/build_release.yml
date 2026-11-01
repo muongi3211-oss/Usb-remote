@@ -35,11 +35,17 @@ jobs:
       - name: Build Release APK bằng Gradle
         run: ./gradlew assembleRelease
 
-      - name: Lưu trữ artifact APK
+      - name: Tự động ký tên APK (Sign APK để cài được trực tiếp)
+        run: |
+          keytool -genkey -v -keystore debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
+          jarsigner -verbose -keystore debug.keystore -storepass android -keypass android app/build/outputs/apk/release/app-release-unsigned.apk androiddebugkey
+          cp app/build/outputs/apk/release/app-release-unsigned.apk app/build/outputs/apk/release/app-release.apk
+
+      - name: Lưu trữ artifact APK đã ký
         uses: actions/upload-artifact@v4
         with:
           name: android-apk
-          path: app/build/outputs/apk/release/app-release-unsigned.apk
+          path: app/build/outputs/apk/release/app-release.apk
 
   # ==========================================
   # JOB 2: BUILD WINDOWS EXE (Chạy trên Windows)
@@ -80,7 +86,7 @@ jobs:
     needs: [build-android, build-windows]
     runs-on: ubuntu-latest
     permissions:
-      contents: write  # <--- QUAN TRỌNG: Cấp quyền ghi để tạo Release và upload file
+      contents: write
     if: startsWith(github.ref, 'refs/tags/v') || github.event_name == 'workflow_dispatch'
 
     steps:
@@ -89,13 +95,13 @@ jobs:
         with:
           path: artifacts
 
-      - name: Tạo GitHub Release và đính kèm file
+      - name: Tạo GitHub Release và đính kèm file đã ký
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || 'v1.0.0-manual' }}
           name: "USB Remote Control Release"
           files: |
-            artifacts/android-apk/app-release-unsigned.apk
+            artifacts/android-apk/app-release.apk
             artifacts/windows-exe/pc_server.exe
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

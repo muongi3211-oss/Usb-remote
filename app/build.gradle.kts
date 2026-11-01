@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.remotecontrol"
+    namespace = "com.example.usbremote"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.remotecontrol"
+        applicationId = "com.example.usbremote"
         minSdk = 26
         targetSdk = 34
         versionCode = 1
@@ -20,7 +20,7 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = false
-            signingConfig = signingConfigs.getByName("debug") // <--- TỰ ĐỘNG KÝ APK CHUẨN V2/V3
+            signingConfig = signingConfigs.getByName("debug")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
